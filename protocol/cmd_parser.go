@@ -1,13 +1,24 @@
 package protocol
 
-import "strings"
+import (
+	"log"
+	"strings"
+)
 
-func ParseCommand(cmdLine string) (cmd, param string) {
-	parts := strings.Split(cmdLine, " ")
-	if len(parts) != 2 {
-		return "", ""
+func ParseCommand(fullCommand string) (command, body, bodyType string) {
+	breakdownCmd := strings.Split(fullCommand, " ")
+	if len(breakdownCmd) < 2 {
+		log.Fatal("PARSER_ERROR: Please provide sufficient params to command!")
+		return "", "", ""
 	}
-	cmd = strings.TrimSpace(parts[0])
-	param = strings.TrimSpace(parts[1])
+
+	command = strings.TrimSpace(breakdownCmd[0])
+	body = strings.TrimSpace(breakdownCmd[1])
+	bodyType = strings.TrimSpace(breakdownCmd[2])
+
+	if bodyType == "" {
+		bodyType = "NORMAL"
+	}
+
 	return
 }
