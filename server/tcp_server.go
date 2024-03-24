@@ -27,13 +27,13 @@ func isSupportedProtocol(network string) bool {
 func networkListener(network string, addr string) net.Listener {
 	listener, err := net.Listen(network, addr)
 	handleError(err, "failed to create listener")
-	defer listener.Close()
 
 	color.Blue("Service started: (%s) %s\n", network, addr)
 	return listener
 }
 
 func handleIncomingRequestContinuously(listener net.Listener) {
+	defer listener.Close()
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
