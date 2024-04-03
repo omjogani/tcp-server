@@ -42,7 +42,7 @@ func handleIncomingRequestContinuously(listener net.Listener) {
 			continue
 		}
 
-		color.Green("Connected to ", conn.RemoteAddr())
+		color.Green("Connected to ", conn.RemoteAddr(), "\n")
 		go maintainConnection(conn)
 	}
 }
@@ -53,7 +53,7 @@ func closeConnection(conn net.Conn) {
 }
 
 func showGuideOfUsage(conn net.Conn) {
-	_, err := conn.Write([]byte("Usage: GET /path"))
+	_, err := conn.Write([]byte("Usage: GET /path <Type: JSON, NORMAL>\n"))
 	handleError(err, "failed to write usage guide")
 }
 
@@ -75,8 +75,12 @@ func maintainConnection(conn net.Conn) {
 			_, err := conn.Write([]byte("Invalid Command!\n"))
 			handleError(err, "failed to acknowledge user about Invalid Command!")
 			continue
+		} else if command == "GET" {
+			GET(conn)
+		} else if command == "POST" {
+			POST(conn, bodyType)
 		}
-		// TODO: Remove below lines
+
 		color.Blue(path)
 		color.Blue(bodyType)
 	}
